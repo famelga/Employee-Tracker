@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const index = require('./index');
 
 // const PORT = ;
 // const app = express();

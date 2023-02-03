@@ -21,128 +21,174 @@ module.exports = function chooseOption() {
             choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 'add an role', 'add an employee', 'update an employee role'],
         },
     ])
-    .then((response) => {
-        if(response.options === "view all departments") {
-          db.query('SELECT * FROM department',(err, result) => {
-            if (err) {
-              console.log(err);
-            }
-            console.table(result);
-            chooseOption();
-          });
-        }
-        if(response.options === "view all roles") {
-            db.query('SELECT * FROM role',(err, result) => {
+    .then(({options}) => {
+        switch (options) {
+            case "view all departments":
+              db.query("SELECT * FROM department", (err, result) => {
                 if (err) {
                   console.log(err);
                 }
                 console.table(result);
                 chooseOption();
               });
-        }
-        if(response.options === "view all employees") {
-            db.query('SELECT * FROM employee',(err, result) => {
+              break;
+            case "view all roles":
+              db.query("SELECT * FROM role", (err, result) => {
                 if (err) {
                   console.log(err);
                 }
                 console.table(result);
                 chooseOption();
               });
-        }
-        if(response.options === "add a department") {
-                const newDept = "Marketing";
-                db.query(`INSERT INTO department (department_name) VALUES (?)`,newDept,(err, result) => {
-                  if (err) {
-                    console.log(err);
-                  }
-                  res.send("Department added successfully");
-                });
-        }
-        if(response.options === "add an role") {
-                const newRole = "CopyWriter";
-                db.query(`INSERT INTO role (title) VALUES (?)`,newRole,(err, result) => {
-                  if (err) {
-                    console.log(err);
-                  }
-                  res.send("Role added successfully");
-                });
-        }
-        if(response.options === "add an employee") {
-                const newEmployee = "Betty";
-                db.query(`INSERT INTO employee (first_name) VALUES (?)`,newRole,(err, result) => {
-                  if (err) {
-                    console.log(err);
-                  }
-                  res.send("Employee added successfully");
-                });
-        }
-        if(response.options === "update an employee role") {
-                const id = req.params.id;
-                db.query(`UPDATE employee SET role_id = '21' where id = ?`,id,(err, result) => {
-                  if (err) {
-                    console.log(err);
-                  }
-                  res.send("Employee role updated");
-                });
-        }
+              break;
+            case "view all employees":
+              db.query("SELECT * FROM employee", (err, result) => {
+                if (err) {
+                  console.log(err);
+                }
+                console.table(result);
+                chooseOption();
+              });
+              break;
+            case "add a department":
+              addDept();
+              break;
+            case "add an role":
+              addRole();
+              break;
+            case "add an employee":
+              addEmployee();
+              break;
+            case "update an employee role":
+              updateEmployee();
+              break;
+            default:
+              console.log("Invalid option selected.");
+              chooseOption();
+              break;
+          }
+          
+        // if(options === "view all departments") {
+        //   db.query('SELECT * FROM department',(err, result) => {
+        //     if (err) {
+        //       console.log(err);
+        //     }
+        //     console.table(result);
+        //     chooseOption();
+        //   });
+        // }
+        // if(options === "view all roles") {
+        //     db.query('SELECT * FROM role',(err, result) => {
+        //         if (err) {
+        //           console.log(err);
+        //         }
+        //         console.table(result);
+        //         chooseOption();
+        //       });
+        // }
+        // if(options === "view all employees") {
+        //     db.query('SELECT * FROM employee',(err, result) => {
+        //         if (err) {
+        //           console.log(err);
+        //         }
+        //         console.table(result);
+        //         chooseOption();
+        //       });
+        // }
+        // if(options === "add a department") {
+        //     addDept();
+        //         // const newDept = "Marketing";
+        //         // db.query(`INSERT INTO department (department_name) VALUES (?)`,newDept,(err, result) => {
+        //         //   if (err) {
+        //         //     console.log(err);
+        //         //   }
+        //         //   console.table(result);
+        //         // chooseOption();
+        //         // });
+        // }
+        // if(options === "add an role") {
+        //     addRole();
+        //         // const newRole = "CopyWriter";
+        //         // db.query(`INSERT INTO role (title) VALUES (?)`,newRole,(err, result) => {
+        //         //   if (err) {
+        //         //     console.log(err);
+        //         //   }
+        //         //   console.table(result);
+        //         //   chooseOption();                });
+        // }
+        // if(options === "add an employee") {
+        //     addEmployee();
+        //         // const newEmployee = "Betty";
+        //         // db.query(`INSERT INTO employee (first_name) VALUES (?)`,newRole,(err, result) => {
+        //         //   if (err) {
+        //         //     console.log(err);
+        //         //   }
+        //         //   console.table(result);
+        //         //   chooseOption();                });
+        // }
+        // if(options === "update an employee role") {
+        //     updateEmployee();
+        //         // const id = 5;
+        //         // db.query(`UPDATE employee SET (first_name='Fayven' last_name= 'Amelga' role_id = 5) where id = ?`,id,(err, result) => {
+        //         //   if (err) {
+        //         //     console.log(err);
+        //         //   }
+        //         //   console.table(result);
+        //         //   chooseOption();                });
+        // }
     });
 };
 
-// function viewDepts()
+function addDept() {
+    inquirer
+    .prompt ([
+        {
+            name: 'dept',
+            message: 'Enter the name of the department.',
+        }
+    ])
+    .then(({dept}) => {
 
-// function viewRoles()
+    })
 
-// function viewEmployees()
+};
 
-// function addDept() {
-//     inquirer
-//     .prompt([
-//         {
-//             name: ,
-//             message: ,
-//         }
-//     ])
-// };
+function addRole() {
+    inquirer
+    .prompt ([
+        {
+            name: 'role',
+            message: 'Enter the name, salary, and department for the role.',
+        }
+    ])
+    .then(({role}) => {
 
-// function addRole() {
-//     inquirer
-//     .prompt([
-//         {
-//             name: ,
-//             message: ,
-//         }
-//     ])
-// };
+    })
+};
 
-// function addEmployee() {
-//     inquirer
-//     .prompt([
-//         {
-//             name: ,
-//             message: ,
-//         }
-//     ])
-// };
+function addEmployee() {
+    inquirer
+    .prompt ([
+        {
+            name: 'employee',
+            message: 'Enter the employee’s first name, last name, role, and manager.',
+        }
+    ])
+    .then(({employee}) => {
 
-// function updateRole() {
-    
-// };
+    })
+};
 
-// chooseOption();
 
-// var index = `<!DOCTYPE html>
-// <html lang="en">
-// <head>
-//     <meta charset="UTF-8">
-//     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-//     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-//     <title>Employee Tracker</title>
-// </head>
-// <body>
-//     <div id="department" class=""></div>
-//     <div id="role" class=""></div>
-//     <div id="employee" class=""></div>
-// </body>
-// </html>`
+function updateEmployee() {
+    inquirer
+    .prompt ([
+        {
+            name: 'update',
+            message: 'Select an employee to update and their new role.',
+        }
+    ])
+    .then(({update}) => {
 
-// module.exports = chooseOption;
+    })
+};

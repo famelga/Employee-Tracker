@@ -1,8 +1,15 @@
 const inquirer = require('inquirer');
 const fb = require('express').Router();
-const db = require('../config');
+const mysql = require('mysql2');
 
-
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        user: 'root',
+        password: 'password',
+        database: 'tracker_db'
+    },
+);
 
 module.exports = function chooseOption() {
     inquirer
@@ -16,22 +23,33 @@ module.exports = function chooseOption() {
     ])
     .then((response) => {
         if(response.options === "view all departments") {
-            app.get('/departments', (req, res) => {
-                res.json(`${res.method} request received to view all departments.`);
-            })
+          db.query('SELECT * FROM department',(err, result) => {
+            if (err) {
+              console.log(err);
+            }
+            console.table(result);
+            chooseOption();
+          });
         }
         if(response.options === "view all roles") {
-            app.get('/roles', (req, res) => {
-                res.json(`${res.method} request received to view all departments.`);
-            })
+            db.query('SELECT * FROM role',(err, result) => {
+                if (err) {
+                  console.log(err);
+                }
+                console.table(result);
+                chooseOption();
+              });
         }
         if(response.options === "view all employees") {
-            app.get('/employees', (req, res) => {
-                res.json(`${res.method} request received to view all departments.`);
-            })
+            db.query('SELECT * FROM employee',(err, result) => {
+                if (err) {
+                  console.log(err);
+                }
+                console.table(result);
+                chooseOption();
+              });
         }
         if(response.options === "add a department") {
-            fb.post('/',(req,res)=> {
                 const newDept = "Marketing";
                 db.query(`INSERT INTO department (department_name) VALUES (?)`,newDept,(err, result) => {
                   if (err) {
@@ -39,14 +57,8 @@ module.exports = function chooseOption() {
                   }
                   res.send("Department added successfully");
                 });
-              
-              
-              })
-            
-              module.exports = fb;
         }
         if(response.options === "add an role") {
-            fb.post('/',(req,res)=> {
                 const newRole = "CopyWriter";
                 db.query(`INSERT INTO role (title) VALUES (?)`,newRole,(err, result) => {
                   if (err) {
@@ -54,14 +66,8 @@ module.exports = function chooseOption() {
                   }
                   res.send("Role added successfully");
                 });
-              
-              
-              })
-            
-              module.exports = fb;
         }
         if(response.options === "add an employee") {
-            fb.post('/',(req,res)=> {
                 const newEmployee = "Betty";
                 db.query(`INSERT INTO employee (first_name) VALUES (?)`,newRole,(err, result) => {
                   if (err) {
@@ -69,14 +75,8 @@ module.exports = function chooseOption() {
                   }
                   res.send("Employee added successfully");
                 });
-              
-              
-              })
-            
-              module.exports = fb;
         }
         if(response.options === "update an employee role") {
-            fb.put('/:role_id',(req,res)=> {
                 const id = req.params.id;
                 db.query(`UPDATE employee SET role_id = '21' where id = ?`,id,(err, result) => {
                   if (err) {
@@ -84,9 +84,6 @@ module.exports = function chooseOption() {
                   }
                   res.send("Employee role updated");
                 });
-              
-              })
-              module.exports = fb;
         }
     });
 };

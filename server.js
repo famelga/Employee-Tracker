@@ -3,28 +3,22 @@ const mysql = require('mysql2');
 const chooseOption = require('./prompt');
 
 
+// async function startDb() {
+// const db = await mysql.createConnection(
+//     {
+//         host: 'localhost',
+//         user: 'root',
+//         password: 'password',
+//         database: 'tracker_db'
+//     },
+// );
 
-const PORT = process.env.PORT || 3001;
-const app = express();
+// await db.connect();
+// console.log('Connected to the database.');
+// };
 
-app.use(express.urlencoded({extended: false}));
-app.use(express.json());
-
-async function startDb() {
-const db = await mysql.createConnection(
-    {
-        host: 'localhost',
-        user: 'root',
-        password: 'password',
-        database: 'tracker_db'
-    },
-);
-
-await db.connect();
-console.log('Connected to the database.');
-};
 async function init() {
-    await startDb();
+    // await startDb();
 chooseOption();
 };
 

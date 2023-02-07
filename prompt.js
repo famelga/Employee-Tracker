@@ -1,15 +1,41 @@
+const { response } = require('express');
 const inquirer = require('inquirer');
 const fb = require('express').Router();
 const mysql = require('mysql2');
 
-const db = mysql.createConnection(
-    {
-        host: 'localhost',
-        user: 'root',
-        password: 'password',
-        database: 'tracker_db'
-    },
-);
+// const Database = require('./database');
+// const db = new Database();
+
+// db.query("SELECT * FROM department")
+//   .then((result) => {
+//     console.table(result);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+
+// const db = mysql.createConnection(
+//     {
+//         host: 'localhost',
+//         user: 'root',
+//         password: 'password',
+//         database: 'tracker_db'
+//     },
+// );
+
+// var deptTable = (connection.connect(function(err) {
+//     if (err) throw err;
+//     console.log("Connected!");
+//   });
+  
+//   connection.query("SELECT * FROM department", function (err, result, fields) {
+//     if (err) throw err;
+//     var departmentName = result;
+//   });
+
+// var deptTable = connection.query("SELECT * FROM department");
+
 
 module.exports = function chooseOption() {
     inquirer
@@ -148,8 +174,14 @@ function addDept() {
         }
     ])
     .then(({dept}) => {
-
-    })
+                db.query(`INSERT INTO department (department_name) VALUES (?)`, dept, (err, result) => {
+                    if (err) {
+                      console.log(err);
+                    }
+                    console.table(result);
+                    console.log(dept);
+                  });
+    });
 
 };
 
@@ -157,25 +189,58 @@ function addRole() {
     inquirer
     .prompt ([
         {
-            name: 'role',
-            message: 'Enter the name, salary, and department for the role.',
-        }
+            name: 'name',
+            message: 'Enter the name for the role.',
+        },
+        {
+            name: 'salary',
+            message: 'Enter the salary for the role.',
+        }, 
+        {
+            name: 'department',
+            message: 'Enter the department for the role.',
+        },
     ])
-    .then(({role}) => {
+    .then((response) => {
 
-    })
+        db.query(`INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`, [response.title, response.salary, response.department], (err, result) => {
+            if (err) {
+              console.log(err);
+            }
+            console.table(result);
+            console.log({response});
+          });
+        })
 };
 
 function addEmployee() {
     inquirer
     .prompt ([
         {
-            name: 'employee',
-            message: 'Enter the employee’s first name, last name, role, and manager.',
-        }
+            name: 'firstName',
+            message: 'Enter the employees first name.',
+        },
+        {
+            name: 'lastName',
+            message: 'Enter the employees last name.',
+        }, 
+        {
+            name: 'role',
+            message: 'Enter the employees role.',
+        },
+        {
+            name: 'manager',
+            message: 'Enter the employees manager.',
+        },
     ])
-    .then(({employee}) => {
-
+    .then((response) => {
+        db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [response.firstName, response.lastName, response.role, response.manager], (err, result) => {
+            if (err) {
+              console.log(err);
+            }
+            console.table(result);
+            console.log(response);
+          });
     })
 };
 
@@ -184,9 +249,14 @@ function updateEmployee() {
     inquirer
     .prompt ([
         {
+            type: 'list',
             name: 'update',
-            message: 'Select an employee to update and their new role.',
-        }
+            message: 'Select an employee to update.',
+        },
+        {
+            name: role,
+            message: 'Enter employees new role.',
+        },
     ])
     .then(({update}) => {
 

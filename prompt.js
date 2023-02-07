@@ -42,74 +42,6 @@ function chooseOption() {
               break;
           }
           
-        // if(options === "view all departments") {
-        //   db.query('SELECT * FROM department',(err, result) => {
-        //     if (err) {
-        //       console.log(err);
-        //     }
-        //     console.table(result);
-        //     chooseOption();
-        //   });
-        // }
-        // if(options === "view all roles") {
-        //     db.query('SELECT * FROM role',(err, result) => {
-        //         if (err) {
-        //           console.log(err);
-        //         }
-        //         console.table(result);
-        //         chooseOption();
-        //       });
-        // }
-        // if(options === "view all employees") {
-        //     db.query('SELECT * FROM employee',(err, result) => {
-        //         if (err) {
-        //           console.log(err);
-        //         }
-        //         console.table(result);
-        //         chooseOption();
-        //       });
-        // }
-        // if(options === "add a department") {
-        //     addDept();
-        //         // const newDept = "Marketing";
-        //         // db.query(`INSERT INTO department (department_name) VALUES (?)`,newDept,(err, result) => {
-        //         //   if (err) {
-        //         //     console.log(err);
-        //         //   }
-        //         //   console.table(result);
-        //         // chooseOption();
-        //         // });
-        // }
-        // if(options === "add an role") {
-        //     addRole();
-        //         // const newRole = "CopyWriter";
-        //         // db.query(`INSERT INTO role (title) VALUES (?)`,newRole,(err, result) => {
-        //         //   if (err) {
-        //         //     console.log(err);
-        //         //   }
-        //         //   console.table(result);
-        //         //   chooseOption();                });
-        // }
-        // if(options === "add an employee") {
-        //     addEmployee();
-        //         // const newEmployee = "Betty";
-        //         // db.query(`INSERT INTO employee (first_name) VALUES (?)`,newRole,(err, result) => {
-        //         //   if (err) {
-        //         //     console.log(err);
-        //         //   }
-        //         //   console.table(result);
-        //         //   chooseOption();                });
-        // }
-        // if(options === "update an employee role") {
-        //     updateEmployee();
-        //         // const id = 5;
-        //         // db.query(`UPDATE employee SET (first_name='Fayven' last_name= 'Amelga' role_id = 5) where id = ?`,id,(err, result) => {
-        //         //   if (err) {
-        //         //     console.log(err);
-        //         //   }
-        //         //   console.table(result);
-        //         //   chooseOption();                });
-        // }
     });
 };
 
@@ -191,52 +123,93 @@ function addRole() {
 };
 
 function addEmployee() {
+    db.findAllRoles()
+    .then(([rows]) => {
+        let roles = rows;
+        const roleChoices=roles.map(({id, title, salary}) => ({
+            name: title,
+            value: id,
+            value: salary,
+        }))
     inquirer
     .prompt ([
         {
-            name: 'firstName',
+            name: 'first_name',
             message: 'Enter the employees first name.',
         },
         {
-            name: 'lastName',
+            name: 'last_name',
             message: 'Enter the employees last name.',
         }, 
         {
-            name: 'role',
-            message: 'Enter the employees role.',
+            type: 'list',
+            name: 'role_id',
+            message: 'Select the employee role.',
+            choices: roleChoices,
         },
         {
-            name: 'manager',
-            message: 'Enter the employees manager.',
+            name: 'manager_id',
+            message: 'Enter the employees manager id.',
         },
     ])
-    .then((response) => {
-        db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [response.firstName, response.lastName, response.role, response.manager], (err, result) => {
-            if (err) {
-              console.log(err);
-            }
-            console.table(result);
-            console.log(response);
-          });
+    .then(employee => {
+        db.createEmployee(employee)
+        .then(() => console.log("Added employee to the database."))
+        .then(()=> chooseOption())
+        })
     })
+
 };
 
 
 function updateEmployee() {
+    db.findAllEmployees()
+    .then(([rows]) => {
+        let employees = rows;
+        const employeeChoices=employees.map(({first_name, last_name}) => ({
+            name: first_name,
+            // name: last_name,
+        }))
+        db.findAllRoles()
+    .then(([rows]) => {
+        let roles = rows;
+        const roleChoices=roles.map(({id, title, salary}) => ({
+            name: title,
+            value: id,
+            value: salary,
+        }))
+    
     inquirer
     .prompt ([
+        // {
+        //     type: 'list',
+        //     name: 'first_name',
+        //     message: 'Select the employee.',
+        //     choices: employeeChoices,
+        // },
         {
             type: 'list',
-            name: 'update',
-            message: 'Select an employee to update.',
+            name: 'first_name',
+            message: 'Select the employee.',
+            choices: employeeChoices,
         },
         {
-            name: role,
-            message: 'Enter employees new role.',
+            type: 'list',
+            name: 'role_id',
+            message: 'Select the employees new role.',
+            choices: roleChoices,
+        },
+        {
+            name: 'manager_id',
+            message: 'Enter the employees manager id.',
         },
     ])
-    .then(({update}) => {
-
+    .then(update => {
+        db.createEmployee(update)
+        .then(() => console.log("Update employee to the database."))
+        .then(()=> chooseOption())
+    })
+})
     })
 };
 

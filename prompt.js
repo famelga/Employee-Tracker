@@ -158,31 +158,36 @@ function addDept() {
 };
 
 function addRole() {
-    inquirer
-    .prompt ([
-        {
-            name: 'name',
-            message: 'Enter the name for the role.',
-        },
-        {
-            name: 'salary',
-            message: 'Enter the salary for the role.',
-        }, 
-        {
-            name: 'department',
-            message: 'Enter the department for the role.',
-        },
-    ])
-    .then((response) => {
-
-        db.query(`INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`, [response.title, response.salary, response.department], (err, result) => {
-            if (err) {
-              console.log(err);
-            }
-            console.table(result);
-            console.log({response});
-          });
-        })
+    db.findAllDepts()
+    .then(([rows]) => {
+        let depts = rows;
+        const deptChoices=depts.map(({id, name}) => ({
+            name: name,
+            value: id 
+        }))
+        inquirer
+        .prompt ([
+            {
+                name: 'title',
+                message: 'Enter the title for the role.',
+            },
+            {
+                name: 'salary',
+                message: 'Enter the salary for the role.',
+            }, 
+            {
+                type: 'list',
+                name: 'department_id',
+                message: 'Select the department name.',
+                choices: deptChoices,
+            },
+        ])
+        .then(role => {
+            db.createRole(role)
+            .then(() => console.log("Added role to the database."))
+            .then(()=> chooseOption())
+            })
+    })
 };
 
 function addEmployee() {

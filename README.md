@@ -18,7 +18,10 @@ This Employee Tracker is a content management system(CMS) that manages a company
 
 Business owners can both view and add departments, roles, and employeesm. Additionally, the roles of employees can also be update. 
 
-![Walk Through Video](./assests/images/Employee%20Tracker%20Walk%20Through%20Video.webm)
+Video: https://watch.screencastify.com/v/NaPapfd5PTJrh0JYx4QL 
+<iframe src="https://drive.google.com/file/d/1mv4_SgKjO58M4TQ_rOtFY9qYnbbvyV9B/preview" width="640" height="480"></iframe>
+
+![Walk Through Video](/assests/media/Employee%20Tracker%20Walk-through%20Video.webm)
 
 ## Portfolio Example
 
@@ -60,7 +63,7 @@ Use the command-line to view and interact with information that is stored in the
 
 ## Learning Points 
 
-I learned a lot about tests. It was difficult to understand the syntax and purpose initially. i felt like it was unnecessary additional work. However, once I started to figure out the syntax, it was actual helpful to see how code are related and to find the errors. 
+This application helped me understand the functionality of switch cases. Using these simplified that steps that were necessary to execute each function.
 
 ## Author Info
 

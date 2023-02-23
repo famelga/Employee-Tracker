@@ -22,7 +22,6 @@ CREATE TABLE role (
 CREATE TABLE employee (
     id INT NOT NULL AUTO_INCREMENT,
     full_name VARCHAR(30),
-    -- last_name VARCHAR(30),
     role_id INT,
     manager_id INT,
     FOREIGN KEY(manager_id)

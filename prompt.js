@@ -136,10 +136,7 @@ function addEmployee() {
             name: 'full_name',
             message: 'Enter the employees first name.',
         },
-        // {
-        //     name: 'last_name',
-        //     message: 'Enter the employees last name.',
-        // }, 
+
         {
             type: 'list',
             name: 'role_id',

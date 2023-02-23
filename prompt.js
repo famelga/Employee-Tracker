@@ -126,21 +126,20 @@ function addEmployee() {
     db.findAllRoles()
     .then(([rows]) => {
         let roles = rows;
-        const roleChoices=roles.map(({id, title, salary}) => ({
+        const roleChoices=roles.map(({id, title}) => ({
             name: title,
             value: id,
-            value: salary,
         }))
     inquirer
     .prompt ([
         {
-            name: 'first_name',
+            name: 'full_name',
             message: 'Enter the employees first name.',
         },
-        {
-            name: 'last_name',
-            message: 'Enter the employees last name.',
-        }, 
+        // {
+        //     name: 'last_name',
+        //     message: 'Enter the employees last name.',
+        // }, 
         {
             type: 'list',
             name: 'role_id',
@@ -166,30 +165,22 @@ function updateEmployee() {
     db.findAllEmployees()
     .then(([rows]) => {
         let employees = rows;
-        const employeeChoices=employees.map(({first_name, last_name}) => ({
-            name: first_name,
-            // name: last_name,
+        const employeeChoices=employees.map(({full_name}) => ({
+            name: full_name,
         }))
         db.findAllRoles()
     .then(([rows]) => {
         let roles = rows;
-        const roleChoices=roles.map(({id, title, salary}) => ({
+        const roleChoices=roles.map(({id, title}) => ({
             name: title,
             value: id,
-            value: salary,
         }))
     
     inquirer
     .prompt ([
-        // {
-        //     type: 'list',
-        //     name: 'first_name',
-        //     message: 'Select the employee.',
-        //     choices: employeeChoices,
-        // },
         {
             type: 'list',
-            name: 'first_name',
+            name: 'full_name',
             message: 'Select the employee.',
             choices: employeeChoices,
         },
